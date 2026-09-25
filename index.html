@@ -13,19 +13,26 @@ html,body{
     width:100%;
     height:100%;
     overflow:hidden;
-    background:#000;
     font-family:'Segoe UI',sans-serif;
 }
 
-/* Bakgrundsbild */
+body{
+    background-image:url('Välkomstbildsehed.png');
+    background-size:cover;
+    background-position:center center;
+    background-repeat:no-repeat;
+}
 
-.bg{
+/* Diskret mörk toning */
+
+body::before{
+    content:"";
     position:absolute;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    object-fit:contain;
+    inset:0;
+    background:linear-gradient(
+        rgba(0,0,0,0.25),
+        rgba(0,0,0,0.05)
+    );
     z-index:1;
 }
 
@@ -41,26 +48,36 @@ html,body{
 .date{
     display:inline-block;
     padding:10px 20px;
-    border-radius:15px;
+
     background:rgba(0,0,0,0.45);
+    backdrop-filter:blur(10px);
+
+    border-radius:15px;
+
     color:white;
     font-size:28px;
 }
 
 .time{
+    color:white;
+
     font-size:120px;
     font-weight:700;
-    color:white;
+
     line-height:1;
-    text-shadow:0 4px 20px rgba(0,0,0,0.8);
+
+    text-shadow:
+    0px 4px 20px rgba(0,0,0,0.9);
 }
 
 /* Väder */
 
 .weatherbox{
     position:absolute;
-    right:35px;
+
     top:35px;
+    right:35px;
+
     z-index:10;
 
     display:flex;
@@ -69,8 +86,10 @@ html,body{
 
     padding:15px 25px;
 
-    border-radius:15px;
     background:rgba(0,0,0,0.45);
+    backdrop-filter:blur(10px);
+
+    border-radius:15px;
 }
 
 .icon{
@@ -78,41 +97,46 @@ html,body{
 }
 
 .temp{
+    color:white;
     font-size:70px;
     font-weight:700;
-    color:white;
 }
 
 .city{
-    font-size:24px;
     color:white;
+    font-size:24px;
 }
 
 </style>
-
 </head>
 
 <body>
 
-<img src="Välkomstbildsehed.png" ="timebox">
+<div class="timebox">
 
-    <div id="date" class="date"></div>
+<div id="date" class="date"></div>
 
-    <div id="clock" class="time"></div>
+<div id="clock" class="time"></div>
 
 </div>
 
 <div class="weatherbox">
 
-    <div id="weatherIcon" class="icon">☀️</div>
+<div id="weatherIcon" class="icon">
+☀️
+</div>
 
-    <div>
+<div>
 
-        <div id="temp" class="temp">10°</div>
+<div id="temp" class="temp">
+10°
+</div>
 
-        <div class="city">Gävle</div>
+<div class="city">
+Gävle
+</div>
 
-    </div>
+</div>
 
 </div>
 
@@ -141,22 +165,22 @@ updateClock();
 setInterval(updateClock,1000);
 
 fetch("https://api.open-meteo.com/v1/forecast?latitude=60.67&longitude=17.14&current_weather=true")
-.then(r => r.json())
-.then(data => {
+.then(r=>r.json())
+.then(data=>{
 
     document.getElementById("temp").innerHTML =
-        Math.round(data.current_weather.temperature) + "°";
+        Math.round(data.current_weather.temperature)+"°";
 
-    let icon = "☀️";
+    let icon="☀️";
 
-    const code = data.current_weather.weathercode;
+    const code=data.current_weather.weathercode;
 
-    if(code >= 1 && code <= 3) icon = "⛅";
-    if(code >= 45) icon = "🌫️";
-    if(code >= 51) icon = "🌦️";
-    if(code >= 61) icon = "🌧️";
-    if(code >= 71) icon = "❄️";
-    if(code >= 95) icon = "⛈️";
+    if(code>=1 && code<=3) icon="⛅";
+    if(code>=45) icon="🌫️";
+    if(code>=51) icon="🌦️";
+    if(code>=61) icon="🌧️";
+    if(code>=71) icon="❄️";
+    if(code>=95) icon="⛈️";
 
     document.getElementById("weatherIcon").innerHTML = icon;
 
