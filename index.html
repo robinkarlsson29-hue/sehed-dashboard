@@ -3,12 +3,12 @@
 
 <head>
 <meta charset="utf-8">
+
 <title>SEHED Dashboard</title>
 
 <style>
 
-html,
-body{
+html,body{
 margin:0;
 width:100%;
 height:100%;
@@ -19,27 +19,27 @@ font-family:'Segoe UI',sans-serif;
 body{
 background-image:url('Välkomstbildsehed.png');
 background-size:cover;
-background-position:center center;
+background-position:center;
 color:white;
 }
 
-/* Mörk toning över bilden */
+/* Toning över bilden */
 
-body::before{
-content:"";
+.overlay{
 position:absolute;
 inset:0;
+
 background:linear-gradient(
 180deg,
-rgba(0,0,0,0.35) 0%,
-rgba(0,0,0,0.10) 40%,
-rgba(0,0,0,0.20) 100%
+rgba(0,0,0,0.35),
+rgba(0,0,0,0.05),
+rgba(0,0,0,0.25)
 );
 }
 
 /* Klocka */
 
-.clock-container{
+.timebox{
 position:absolute;
 top:40px;
 left:50px;
@@ -50,51 +50,67 @@ z-index:10;
 font-size:180px;
 font-weight:700;
 line-height:0.9;
-text-shadow:0 8px 30px rgba(0,0,0,0.7);
+
+text-shadow:
+0 0 20px rgba(0,0,0,0.9),
+0 0 40px rgba(0,0,0,0.9);
 }
 
 .date{
 font-size:42px;
 font-weight:300;
-margin-top:10px;
-text-shadow:0 4px 20px rgba(0,0,0,0.7);
+
+text-shadow:
+0 0 20px rgba(0,0,0,0.9);
 }
 
 /* Väder */
 
-.weather{
+.weatherbox{
 position:absolute;
-top:55px;
+top:60px;
 right:60px;
-text-align:right;
 z-index:10;
+text-align:center;
+}
+
+.icon{
+font-size:120px;
+line-height:1;
 }
 
 .temp{
-font-size:150px;
+font-size:90px;
 font-weight:700;
-line-height:0.9;
-text-shadow:0 8px 30px rgba(0,0,0,0.7);
+
+text-shadow:
+0 0 20px rgba(0,0,0,0.9),
+0 0 40px rgba(0,0,0,0.9);
 }
 
 .location{
-font-size:42px;
-font-weight:300;
-text-shadow:0 4px 20px rgba(0,0,0,0.7);
+font-size:32px;
+
+text-shadow:
+0 0 20px rgba(0,0,0,0.9);
 }
 
-/* Diskret rad längst ner */
+/* Nederkant */
 
-.bottom{
+.footer{
 position:absolute;
-bottom:30px;
+bottom:25px;
 left:50%;
 transform:translateX(-50%);
-font-size:36px;
-letter-spacing:3px;
+
+font-size:26px;
+letter-spacing:5px;
 font-weight:300;
-text-shadow:0 4px 20px rgba(0,0,0,0.8);
+
 z-index:10;
+
+text-shadow:
+0 0 20px rgba(0,0,0,0.9);
 }
 
 </style>
@@ -102,19 +118,25 @@ z-index:10;
 
 <body>
 
-<div class="clock-container">
+<div class="overlay"></div>
 
-<div class="time" id="clock">
-07:00
-</div>
+<div class="timebox">
 
 <div class="date" id="date">
-fredag 25 september 2026
+-
+</div>
+
+<div class="time" id="clock">
+00:00
 </div>
 
 </div>
 
-<div class="weather">
+<div class="weatherbox">
+
+<div class="icon" id="weatherIcon">
+☀️
+</div>
 
 <div class="temp" id="temp">
 10°
@@ -126,7 +148,7 @@ Gävle
 
 </div>
 
-<div class="bottom">
+<div class="footer">
 SEHED BYGG GÄVLEBORG
 </div>
 
@@ -137,32 +159,63 @@ function updateClock(){
 const d = new Date();
 
 document.getElementById("clock").innerHTML =
-d.toLocaleTimeString("sv-SE",
+d.toLocaleTimeString(
+"sv-SE",
 {
 hour:"2-digit",
 minute:"2-digit"
-});
+}
+);
 
 document.getElementById("date").innerHTML =
-d.toLocaleDateString("sv-SE",
+d.toLocaleDateString(
+"sv-SE",
 {
 weekday:"long",
-year:"numeric",
+day:"numeric",
 month:"long",
-day:"numeric"
-});
+year:"numeric"
+}
+);
 
 }
 
 updateClock();
+
 setInterval(updateClock,1000);
 
 fetch("https://api.open-meteo.com/v1/forecast?latitude=60.67&longitude=17.14&current_weather=true")
+
 .then(r=>r.json())
+
 .then(data=>{
 
 document.getElementById("temp").innerHTML =
 Math.round(data.current_weather.temperature)+"°";
+
+const code = data.current_weather.weathercode;
+
+let icon="☀️";
+
+if(code>=1 && code<=3)
+icon="⛅";
+
+if(code>=45)
+icon="🌫️";
+
+if(code>=51)
+icon="🌦️";
+
+if(code>=61)
+icon="🌧️";
+
+if(code>=71)
+icon="❄️";
+
+if(code>=95)
+icon="⛈️";
+
+document.getElementById("weatherIcon").innerHTML = icon;
 
 });
 
