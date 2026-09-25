@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="sv">
-
 <head>
 <meta charset="utf-8">
 <title>SEHED Dashboard</title>
@@ -8,139 +7,98 @@
 <style>
 
 html,body{
-margin:0;
-width:100%;
-height:100%;
-overflow:hidden;
-font-family:'Segoe UI',sans-serif;
+    margin:0;
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    background:black;
+    font-family:'Segoe UI',sans-serif;
 }
 
-body{
-background-image:url('Välkomstbildsehed.png');
-background-size:cover;
-background-position:center;
-color:white;
+/* Hela originalbilden visas */
+
+.bg{
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    object-fit:contain;
+    background:black;
 }
 
-/* Mörk toning */
-
-body:before{
-content:"";
-position:absolute;
-inset:0;
-background:rgba(0,0,0,0.15);
-}
-
-/* Klocka */
+/* Tid */
 
 .timebox{
-position:absolute;
-top:40px;
-left:40px;
-z-index:20;
+    position:absolute;
+    top:35px;
+    left:35px;
+    z-index:10;
 }
 
 .date{
-font-size:32px;
-font-weight:300;
+    display:inline-block;
 
-padding:10px 20px;
+    padding:10px 20px;
 
-background:rgba(0,0,0,0.35);
-backdrop-filter:blur(10px);
+    background:rgba(0,0,0,0.45);
+    backdrop-filter:blur(10px);
 
-border-radius:15px;
+    border-radius:15px;
 
-display:inline-block;
+    color:white;
+    font-size:28px;
 }
 
 .time{
-font-size:140px;
-font-weight:700;
+    color:white;
+    font-size:120px;
+    font-weight:700;
 
-line-height:1;
-
-text-shadow:
-0 5px 30px rgba(0,0,0,0.8);
+    text-shadow:
+    0 4px 20px rgba(0,0,0,0.9);
 }
 
 /* Väder */
 
 .weatherbox{
 
-position:absolute;
+    position:absolute;
 
-top:40px;
-right:40px;
+    top:35px;
+    right:35px;
 
-display:flex;
-align-items:center;
-gap:20px;
+    display:flex;
+    align-items:center;
+    gap:20px;
 
-padding:15px 25px;
+    padding:12px 20px;
 
-background:rgba(0,0,0,0.35);
-backdrop-filter:blur(10px);
+    background:rgba(0,0,0,0.45);
+    backdrop-filter:blur(10px);
 
-border-radius:15px;
+    border-radius:15px;
 
-z-index:20;
-
+    z-index:10;
 }
 
 .icon{
-
-font-size:90px;
-
-line-height:1;
-
+    font-size:80px;
 }
 
 .weatherright{
-
-text-align:left;
-
+    color:white;
+    text-align:left;
 }
 
 .temp{
-
-font-size:80px;
-font-weight:700;
-line-height:1;
-
+    font-size:70px;
+    font-weight:700;
+    line-height:1;
 }
 
 .city{
-
-font-size:28px;
-font-weight:300;
-
-}
-
-/* Diskret logga nederst */
-
-.bottom{
-
-position:absolute;
-
-bottom:20px;
-left:50%;
-
-transform:translateX(-50%);
-
-font-size:24px;
-
-letter-spacing:5px;
-
-font-weight:300;
-
-opacity:0.8;
-
-text-shadow:
-0 3px 15px rgba(0,0,0,0.9);
-
-z-index:20;
-
+    font-size:26px;
 }
 
 </style>
@@ -149,58 +107,56 @@ z-index:20;
 
 <body>
 
+<img src="Väsehed.png
+
 <div class="timebox">
 
-<div class="date" id="date"></div>
+    <div id="date" class="date"></div>
 
-<div class="time" id="clock"></div>
+    <div id="clock" class="time"></div>
 
 </div>
 
 <div class="weatherbox">
 
-<div class="icon" id="weatherIcon">
-☀️
-</div>
+    <div id="weatherIcon" class="icon">
+        ☀️
+    </div>
 
-<div class="weatherright">
+    <div class="weatherright">
 
-<div class="temp" id="temp">10°</div>
+        <div id="temp" class="temp">
+            10°
+        </div>
 
-<div class="city">Gävle</div>
+        <div class="city">
+            Gävle
+        </div>
 
-</div>
+    </div>
 
-</div>
-
-<div class="bottom">
-SEHED BYGG GÄVLEBORG
 </div>
 
 <script>
 
 function updateClock(){
 
-const d = new Date();
+    const d = new Date();
 
-document.getElementById("clock").innerHTML =
-d.toLocaleTimeString(
-"sv-SE",
-{
-hour:"2-digit",
-minute:"2-digit"
-}
-);
+    document.getElementById("clock").innerHTML =
+        d.toLocaleTimeString("sv-SE",
+        {
+            hour:"2-digit",
+            minute:"2-digit"
+        });
 
-document.getElementById("date").innerHTML =
-d.toLocaleDateString(
-"sv-SE",
-{
-weekday:"long",
-day:"numeric",
-month:"short"
-}
-);
+    document.getElementById("date").innerHTML =
+        d.toLocaleDateString("sv-SE",
+        {
+            weekday:"long",
+            day:"numeric",
+            month:"short"
+        });
 
 }
 
@@ -208,42 +164,28 @@ updateClock();
 setInterval(updateClock,1000);
 
 fetch("https://api.open-meteo.com/v1/forecast?latitude=60.67&longitude=17.14&current_weather=true")
-
 .then(r=>r.json())
-
 .then(data=>{
 
-document.getElementById("temp").innerHTML =
-Math.round(data.current_weather.temperature)+"°";
+    document.getElementById("temp").innerHTML =
+        Math.round(data.current_weather.temperature)+"°";
 
-const code = data.current_weather.weathercode;
+    let icon="☀️";
 
-let icon="☀️";
+    const code = data.current_weather.weathercode;
 
-if(code>=1 && code<=3)
-icon="⛅";
+    if(code>=1 && code<=3) icon="⛅";
+    if(code>=45) icon="🌫️";
+    if(code>=51) icon="🌦️";
+    if(code>=61) icon="🌧️";
+    if(code>=71) icon="❄️";
+    if(code>=95) icon="⛈️";
 
-if(code>=45)
-icon="🌫️";
-
-if(code>=51)
-icon="🌦️";
-
-if(code>=61)
-icon="🌧️";
-
-if(code>=71)
-icon="❄️";
-
-if(code>=95)
-icon="⛈️";
-
-document.getElementById("weatherIcon").innerHTML = icon;
+    document.getElementById("weatherIcon").innerHTML = icon;
 
 });
 
 </script>
 
 </body>
-
 </html>
