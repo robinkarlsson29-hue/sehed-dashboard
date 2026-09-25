@@ -51,6 +51,10 @@ position:absolute;
 top:30px;
 right:30px;
 
+display:flex;
+align-items:center;
+gap:15px;
+
 font-size:60px;
 
 color:white;
@@ -59,6 +63,10 @@ text-shadow:
 0 0 20px black,
 0 0 40px black;
 
+}
+
+.weatherIcon{
+font-size:70px;
 }
 
 </style>
@@ -72,7 +80,15 @@ text-shadow:
 </div>
 
 <div class="weather">
-☀️ 10°
+
+<div id="weatherIcon" class="weatherIcon">
+☀️
+</div>
+
+<div id="temp">
+10°
+</div>
+
 </div>
 
 <script>
@@ -90,9 +106,53 @@ minute:"2-digit"
 
 }
 
-updateClock();
+function updateWeather(){
 
+fetch("https://api.open-meteo.com/v1/forecast?latitude=60.67&longitude=17.14&current_weather=true")
+
+.then(r=>r.json())
+
+.then(data=>{
+
+document.getElementById("temp").innerHTML=
+Math.round(data.current_weather.temperature)+"°";
+
+const code=data.current_weather.weathercode;
+
+let icon="☀️";
+
+if(code>=1 && code<=3)
+icon="⛅";
+
+if(code>=45)
+icon="🌫️";
+
+if(code>=51)
+icon="🌦️";
+
+if(code>=61)
+icon="🌧️";
+
+if(code>=71)
+icon="❄️";
+
+if(code>=95)
+icon="⛈️";
+
+document.getElementById("weatherIcon").innerHTML=icon;
+
+});
+
+}
+
+updateClock();
 setInterval(updateClock,1000);
+
+updateWeather();
+
+/* uppdaterar vädret var 15:e minut */
+
+setInterval(updateWeather,900000);
 
 </script>
 
