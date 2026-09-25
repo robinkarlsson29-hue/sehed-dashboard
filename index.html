@@ -3,7 +3,6 @@
 
 <head>
 <meta charset="utf-8">
-
 <title>SEHED Dashboard</title>
 
 <style>
@@ -23,18 +22,13 @@ background-position:center;
 color:white;
 }
 
-/* Toning över bilden */
+/* Mörk toning */
 
-.overlay{
+body:before{
+content:"";
 position:absolute;
 inset:0;
-
-background:linear-gradient(
-180deg,
-rgba(0,0,0,0.35),
-rgba(0,0,0,0.05),
-rgba(0,0,0,0.25)
-);
+background:rgba(0,0,0,0.15);
 }
 
 /* Klocka */
@@ -42,93 +36,124 @@ rgba(0,0,0,0.25)
 .timebox{
 position:absolute;
 top:40px;
-left:50px;
-z-index:10;
-}
-
-.time{
-font-size:180px;
-font-weight:700;
-line-height:0.9;
-
-text-shadow:
-0 0 20px rgba(0,0,0,0.9),
-0 0 40px rgba(0,0,0,0.9);
+left:40px;
+z-index:20;
 }
 
 .date{
-font-size:42px;
+font-size:32px;
 font-weight:300;
 
+padding:10px 20px;
+
+background:rgba(0,0,0,0.35);
+backdrop-filter:blur(10px);
+
+border-radius:15px;
+
+display:inline-block;
+}
+
+.time{
+font-size:140px;
+font-weight:700;
+
+line-height:1;
+
 text-shadow:
-0 0 20px rgba(0,0,0,0.9);
+0 5px 30px rgba(0,0,0,0.8);
 }
 
 /* Väder */
 
 .weatherbox{
+
 position:absolute;
-top:60px;
-right:60px;
-z-index:10;
-text-align:center;
+
+top:40px;
+right:40px;
+
+display:flex;
+align-items:center;
+gap:20px;
+
+padding:15px 25px;
+
+background:rgba(0,0,0,0.35);
+backdrop-filter:blur(10px);
+
+border-radius:15px;
+
+z-index:20;
+
 }
 
 .icon{
-font-size:120px;
+
+font-size:90px;
+
 line-height:1;
+
+}
+
+.weatherright{
+
+text-align:left;
+
 }
 
 .temp{
-font-size:90px;
+
+font-size:80px;
 font-weight:700;
+line-height:1;
 
-text-shadow:
-0 0 20px rgba(0,0,0,0.9),
-0 0 40px rgba(0,0,0,0.9);
 }
 
-.location{
-font-size:32px;
+.city{
 
-text-shadow:
-0 0 20px rgba(0,0,0,0.9);
-}
-
-/* Nederkant */
-
-.footer{
-position:absolute;
-bottom:25px;
-left:50%;
-transform:translateX(-50%);
-
-font-size:26px;
-letter-spacing:5px;
+font-size:28px;
 font-weight:300;
 
-z-index:10;
+}
+
+/* Diskret logga nederst */
+
+.bottom{
+
+position:absolute;
+
+bottom:20px;
+left:50%;
+
+transform:translateX(-50%);
+
+font-size:24px;
+
+letter-spacing:5px;
+
+font-weight:300;
+
+opacity:0.8;
 
 text-shadow:
-0 0 20px rgba(0,0,0,0.9);
+0 3px 15px rgba(0,0,0,0.9);
+
+z-index:20;
+
 }
 
 </style>
+
 </head>
 
 <body>
 
-<div class="overlay"></div>
-
 <div class="timebox">
 
-<div class="date" id="date">
--
-</div>
+<div class="date" id="date"></div>
 
-<div class="time" id="clock">
-00:00
-</div>
+<div class="time" id="clock"></div>
 
 </div>
 
@@ -138,17 +163,17 @@ text-shadow:
 ☀️
 </div>
 
-<div class="temp" id="temp">
-10°
-</div>
+<div class="weatherright">
 
-<div class="location">
-Gävle
-</div>
+<div class="temp" id="temp">10°</div>
+
+<div class="city">Gävle</div>
 
 </div>
 
-<div class="footer">
+</div>
+
+<div class="bottom">
 SEHED BYGG GÄVLEBORG
 </div>
 
@@ -173,15 +198,13 @@ d.toLocaleDateString(
 {
 weekday:"long",
 day:"numeric",
-month:"long",
-year:"numeric"
+month:"short"
 }
 );
 
 }
 
 updateClock();
-
 setInterval(updateClock,1000);
 
 fetch("https://api.open-meteo.com/v1/forecast?latitude=60.67&longitude=17.14&current_weather=true")
@@ -222,4 +245,5 @@ document.getElementById("weatherIcon").innerHTML = icon;
 </script>
 
 </body>
+
 </html>
