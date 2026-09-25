@@ -2,14 +2,13 @@
 <html lang="sv">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
 <title>SEHED Dashboard</title>
 
 <style>
 
-html,
-body{
+html,body{
     margin:0;
     width:100%;
     height:100%;
@@ -18,18 +17,19 @@ body{
     font-family:'Segoe UI',sans-serif;
 }
 
-/* BAKGRUNDSBILD */
+/* Bakgrundsbild */
 
 .bg{
     position:absolute;
-    inset:0;
+    top:0;
+    left:0;
     width:100%;
     height:100%;
     object-fit:contain;
     z-index:1;
 }
 
-/* KLOCKA */
+/* Klocka */
 
 .timebox{
     position:absolute;
@@ -41,27 +41,26 @@ body{
 .date{
     display:inline-block;
     padding:10px 20px;
+    border-radius:15px;
     background:rgba(0,0,0,0.45);
-    backdrop-filter:blur(12px);
-    border-radius:16px;
-    color:#fff;
-    font-size:30px;
+    color:white;
+    font-size:28px;
 }
 
 .time{
-    color:#fff;
-    font-size:130px;
+    font-size:120px;
     font-weight:700;
+    color:white;
     line-height:1;
-    text-shadow:0 4px 20px rgba(0,0,0,.8);
+    text-shadow:0 4px 20px rgba(0,0,0,0.8);
 }
 
-/* VÄDER */
+/* Väder */
 
 .weatherbox{
     position:absolute;
-    top:35px;
     right:35px;
+    top:35px;
     z-index:10;
 
     display:flex;
@@ -70,34 +69,32 @@ body{
 
     padding:15px 25px;
 
-    background:rgba(0,0,0,.45);
-    backdrop-filter:blur(12px);
-
-    border-radius:18px;
+    border-radius:15px;
+    background:rgba(0,0,0,0.45);
 }
 
 .icon{
-    font-size:90px;
+    font-size:80px;
 }
 
 .temp{
-    color:#fff;
-    font-size:80px;
+    font-size:70px;
     font-weight:700;
-    line-height:1;
+    color:white;
 }
 
 .city{
-    color:#fff;
-    font-size:26px;
+    font-size:24px;
+    color:white;
 }
 
 </style>
+
 </head>
 
 <body>
 
-<img src="Välkomstbildsehed.png" classebox">
+<img src="Välkomstbildsehed.png" ="timebox">
 
     <div id="date" class="date"></div>
 
@@ -148,7 +145,7 @@ fetch("https://api.open-meteo.com/v1/forecast?latitude=60.67&longitude=17.14&cur
 .then(data => {
 
     document.getElementById("temp").innerHTML =
-        Math.round(data.current_weather.temperature)+"°";
+        Math.round(data.current_weather.temperature) + "°";
 
     let icon = "☀️";
 
