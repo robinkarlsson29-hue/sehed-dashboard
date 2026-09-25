@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="sv">
+
 <head>
 <meta charset="utf-8">
 <title>SEHED Dashboard</title>
@@ -15,89 +16,98 @@ html,body{
     font-family:'Segoe UI',sans-serif;
 }
 
-/* Hela originalbilden visas */
+/* BILDEN */
 
 .bg{
     position:absolute;
-    top:0;
-    left:0;
+    inset:0;
+
     width:100%;
     height:100%;
+
     object-fit:contain;
-    background:black;
+    z-index:1;
 }
 
-/* Tid */
+/* TID */
 
 .timebox{
+
     position:absolute;
-    top:35px;
-    left:35px;
+
+    top:30px;
+    left:30px;
+
     z-index:10;
+
 }
 
 .date{
+
     display:inline-block;
 
     padding:10px 20px;
 
-    background:rgba(0,0,0,0.45);
-    backdrop-filter:blur(10px);
+    background:rgba(0,0,0,.50);
+    backdrop-filter:blur(15px);
 
-    border-radius:15px;
+    border-radius:16px;
 
     color:white;
-    font-size:28px;
+
+    font-size:30px;
+
 }
 
 .time{
+
     color:white;
-    font-size:120px;
+
+    font-size:130px;
     font-weight:700;
 
     text-shadow:
-    0 4px 20px rgba(0,0,0,0.9);
+    0 4px 30px rgba(0,0,0,.8);
+
 }
 
-/* Väder */
+/* VÄDER */
 
 .weatherbox{
 
     position:absolute;
 
-    top:35px;
-    right:35px;
+    top:30px;
+    right:30px;
+
+    z-index:10;
 
     display:flex;
     align-items:center;
     gap:20px;
 
-    padding:12px 20px;
+    padding:15px 25px;
 
-    background:rgba(0,0,0,0.45);
-    backdrop-filter:blur(10px);
+    background:rgba(0,0,0,.50);
+    backdrop-filter:blur(15px);
 
-    border-radius:15px;
+    border-radius:18px;
 
-    z-index:10;
 }
 
 .icon{
-    font-size:80px;
-}
-
-.weatherright{
-    color:white;
-    text-align:left;
+    font-size:90px;
 }
 
 .temp{
-    font-size:70px;
+    color:white;
+    font-size:80px;
     font-weight:700;
     line-height:1;
 }
 
 .city{
+    color:white;
     font-size:26px;
 }
 
@@ -107,33 +117,33 @@ html,body{
 
 <body>
 
-<img src="Väsehed.png
+<img srcbildsehed.png
 
 <div class="timebox">
 
-    <div id="date" class="date"></div>
+<div id="date" class="date"></div>
 
-    <div id="clock" class="time"></div>
+<div id="clock" class="time"></div>
 
 </div>
 
 <div class="weatherbox">
 
-    <div id="weatherIcon" class="icon">
-        ☀️
-    </div>
+<div id="weatherIcon" class="icon">
+☀️
+</div>
 
-    <div class="weatherright">
+<div>
 
-        <div id="temp" class="temp">
-            10°
-        </div>
+<div id="temp" class="temp">
+10°
+</div>
 
-        <div class="city">
-            Gävle
-        </div>
+<div class="city">
+Gävle
+</div>
 
-    </div>
+</div>
 
 </div>
 
@@ -141,22 +151,22 @@ html,body{
 
 function updateClock(){
 
-    const d = new Date();
+const d = new Date();
 
-    document.getElementById("clock").innerHTML =
-        d.toLocaleTimeString("sv-SE",
-        {
-            hour:"2-digit",
-            minute:"2-digit"
-        });
+document.getElementById("clock").innerHTML =
+d.toLocaleTimeString("sv-SE",
+{
+hour:"2-digit",
+minute:"2-digit"
+});
 
-    document.getElementById("date").innerHTML =
-        d.toLocaleDateString("sv-SE",
-        {
-            weekday:"long",
-            day:"numeric",
-            month:"short"
-        });
+document.getElementById("date").innerHTML =
+d.toLocaleDateString("sv-SE",
+{
+weekday:"long",
+day:"numeric",
+month:"short"
+});
 
 }
 
@@ -167,21 +177,21 @@ fetch("https://api.open-meteo.com/v1/forecast?latitude=60.67&longitude=17.14&cur
 .then(r=>r.json())
 .then(data=>{
 
-    document.getElementById("temp").innerHTML =
-        Math.round(data.current_weather.temperature)+"°";
+document.getElementById("temp").innerHTML =
+Math.round(data.current_weather.temperature)+"°";
 
-    let icon="☀️";
+const code = data.current_weather.weathercode;
 
-    const code = data.current_weather.weathercode;
+let icon="☀️";
 
-    if(code>=1 && code<=3) icon="⛅";
-    if(code>=45) icon="🌫️";
-    if(code>=51) icon="🌦️";
-    if(code>=61) icon="🌧️";
-    if(code>=71) icon="❄️";
-    if(code>=95) icon="⛈️";
+if(code>=1 && code<=3) icon="⛅";
+if(code>=45) icon="🌫️";
+if(code>=51) icon="🌦️";
+if(code>=61) icon="🌧️";
+if(code>=71) icon="❄️";
+if(code>=95) icon="⛈️";
 
-    document.getElementById("weatherIcon").innerHTML = icon;
+document.getElementById("weatherIcon").innerHTML = icon;
 
 });
 
