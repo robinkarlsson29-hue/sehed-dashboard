@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="sv">
 <head>
 <meta charset="utf-8">
 
@@ -13,28 +13,21 @@ overflow:hidden;
 }
 
 body{
-
 background-image:url('Välkomstbildsehed.png');
-
 background-size:cover;
-
 background-position:center center;
-
 background-repeat:no-repeat;
-
 font-family:'Segoe UI',sans-serif;
-
 }
 
-.clock{
+/* KLOCKA */
+
+.clockbox{
 
 position:absolute;
 
 top:30px;
 left:30px;
-
-font-size:100px;
-font-weight:700;
 
 color:white;
 
@@ -43,6 +36,22 @@ text-shadow:
 0 0 40px black;
 
 }
+
+.clock{
+
+font-size:100px;
+font-weight:700;
+line-height:1;
+
+}
+
+.date{
+
+font-size:32px;
+
+}
+
+/* VÄDER */
 
 .weather{
 
@@ -52,21 +61,90 @@ top:30px;
 right:30px;
 
 display:flex;
-align-items:center;
 gap:15px;
+align-items:center;
 
-font-size:60px;
+padding:15px 20px;
+
+background:rgba(0,0,0,.35);
+
+backdrop-filter:blur(10px);
+
+border-radius:15px;
 
 color:white;
 
 text-shadow:
-0 0 20px black,
-0 0 40px black;
+0 0 20px black;
 
 }
 
-.weatherIcon{
-font-size:70px;
+.weathericon{
+
+font-size:80px;
+
+}
+
+.weathertext{
+
+text-align:left;
+
+}
+
+.temp{
+
+font-size:65px;
+font-weight:700;
+line-height:1;
+
+}
+
+.city{
+
+font-size:24px;
+
+}
+
+.description{
+
+font-size:20px;
+opacity:0.9;
+
+}
+
+.wind{
+
+font-size:18px;
+opacity:0.8;
+
+}
+
+/* MEDDELANDE */
+
+.footer{
+
+position:absolute;
+
+left:50%;
+bottom:25px;
+
+transform:translateX(-50%);
+
+padding:10px 20px;
+
+border-radius:10px;
+
+background:rgba(0,0,0,.35);
+
+backdrop-filter:blur(10px);
+
+color:white;
+
+font-size:24px;
+
+text-shadow:
+0 0 15px black;
+
 }
 
 </style>
@@ -75,32 +153,58 @@ font-size:70px;
 
 <body>
 
-<div class="clock" id="clock">
-00:00
+<div class="clockbox">
+
+<div id="clock" class="clock"></div>
+
+<div id="date" class="date"></div>
+
 </div>
 
 <div class="weather">
 
-<div id="weatherIcon" class="weatherIcon">
-☀️
+<div id="weatherIcon" class="weathericon">☀️</div>
+
+<div class="weathertext">
+
+<div id="temp" class="temp">10°</div>
+
+<div class="city">Gävle</div>
+
+<div id="description" class="description">Klart</div>
+
+<div id="wind" class="wind">Vind 0 m/s</div>
+
 </div>
 
-<div id="temp">
-10°
 </div>
 
+<div id="footer" class="footer">
+Välkommen till SEHED Bygg Gävleborg
 </div>
 
 <script>
 
 function updateClock(){
 
-document.getElementById("clock").innerHTML=
-new Date().toLocaleTimeString(
+const d = new Date();
+
+document.getElementById("clock").innerHTML =
+d.toLocaleTimeString(
 "sv-SE",
 {
 hour:"2-digit",
 minute:"2-digit"
+}
+);
+
+document.getElementById("date").innerHTML =
+d.toLocaleDateString(
+"sv-SE",
+{
+weekday:"long",
+day:"numeric",
+month:"short"
 }
 );
 
@@ -114,48 +218,82 @@ fetch("https://api.open-meteo.com/v1/forecast?latitude=60.67&longitude=17.14&cur
 
 .then(data=>{
 
-document.getElementById("temp").innerHTML=
+document.getElementById("temp").innerHTML =
 Math.round(data.current_weather.temperature)+"°";
 
-const code=data.current_weather.weathercode;
+document.getElementById("wind").innerHTML =
+"Vind " + Math.round(data.current_weather.windspeed) + " m/s";
+
+const code = data.current_weather.weathercode;
 
 let icon="☀️";
+let text="Klart";
 
-if(code>=1 && code<=3)
+if(code>=1 && code<=3){
 icon="⛅";
+text="Delvis molnigt";
+}
 
-if(code>=45)
+if(code>=45){
 icon="🌫️";
+text="Dimma";
+}
 
-if(code>=51)
+if(code>=51){
 icon="🌦️";
+text="Regnskurar";
+}
 
-if(code>=61)
+if(code>=61){
 icon="🌧️";
+text="Regn";
+}
 
-if(code>=71)
+if(code>=71){
 icon="❄️";
+text="Snö";
+}
 
-if(code>=95)
+if(code>=95){
 icon="⛈️";
+text="Åska";
+}
 
 document.getElementById("weatherIcon").innerHTML=icon;
+document.getElementById("description").innerHTML=text;
 
 });
 
 }
 
+const messages=[
+
+"Välkommen till SEHED Bygg Gävleborg",
+
+"Tillsammans bygger vi framtidens Gävleborg",
+
+"Besök gärna sehed.se"
+
+];
+
+let i=0;
+
+setInterval(function(){
+
+i++;
+
+document.getElementById("footer").innerHTML=
+messages[i % messages.length];
+
+},10000);
+
 updateClock();
 setInterval(updateClock,1000);
 
 updateWeather();
-
-/* uppdaterar vädret var 15:e minut */
-
 setInterval(updateWeather,900000);
 
 </script>
 
 </body>
-
 </html>
