@@ -1,192 +1,101 @@
 <!DOCTYPE html>
-<html lang="sv">
+<html>
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
-<title>SEHED Dashboard</title>
 
 <style>
 
 html,body{
-    margin:0;
-    width:100%;
-    height:100%;
-    overflow:hidden;
-    font-family:'Segoe UI',sans-serif;
+margin:0;
+width:100%;
+height:100%;
+overflow:hidden;
 }
 
 body{
-    background-image:url('Välkomstbildsehed.png');
-    background-size:cover;
-    background-position:center center;
-    background-repeat:no-repeat;
+
+background-image:url('Välkomstbildsehed.png');
+
+background-size:cover;
+
+background-position:center center;
+
+background-repeat:no-repeat;
+
+font-family:'Segoe UI',sans-serif;
+
 }
 
-/* Diskret mörk toning */
+.clock{
 
-body::before{
-    content:"";
-    position:absolute;
-    inset:0;
-    background:linear-gradient(
-        rgba(0,0,0,0.25),
-        rgba(0,0,0,0.05)
-    );
-    z-index:1;
+position:absolute;
+
+top:30px;
+left:30px;
+
+font-size:100px;
+font-weight:700;
+
+color:white;
+
+text-shadow:
+0 0 20px black,
+0 0 40px black;
+
 }
 
-/* Klocka */
+.weather{
 
-.timebox{
-    position:absolute;
-    top:35px;
-    left:35px;
-    z-index:10;
-}
+position:absolute;
 
-.date{
-    display:inline-block;
-    padding:10px 20px;
+top:30px;
+right:30px;
 
-    background:rgba(0,0,0,0.45);
-    backdrop-filter:blur(10px);
+font-size:60px;
 
-    border-radius:15px;
+color:white;
 
-    color:white;
-    font-size:28px;
-}
+text-shadow:
+0 0 20px black,
+0 0 40px black;
 
-.time{
-    color:white;
-
-    font-size:120px;
-    font-weight:700;
-
-    line-height:1;
-
-    text-shadow:
-    0px 4px 20px rgba(0,0,0,0.9);
-}
-
-/* Väder */
-
-.weatherbox{
-    position:absolute;
-
-    top:35px;
-    right:35px;
-
-    z-index:10;
-
-    display:flex;
-    align-items:center;
-    gap:20px;
-
-    padding:15px 25px;
-
-    background:rgba(0,0,0,0.45);
-    backdrop-filter:blur(10px);
-
-    border-radius:15px;
-}
-
-.icon{
-    font-size:80px;
-}
-
-.temp{
-    color:white;
-    font-size:70px;
-    font-weight:700;
-}
-
-.city{
-    color:white;
-    font-size:24px;
 }
 
 </style>
+
 </head>
 
 <body>
 
-<div class="timebox">
-
-<div id="date" class="date"></div>
-
-<div id="clock" class="time"></div>
-
+<div class="clock" id="clock">
+00:00
 </div>
 
-<div class="weatherbox">
-
-<div id="weatherIcon" class="icon">
-☀️
-</div>
-
-<div>
-
-<div id="temp" class="temp">
-10°
-</div>
-
-<div class="city">
-Gävle
-</div>
-
-</div>
-
+<div class="weather">
+☀️ 10°
 </div>
 
 <script>
 
 function updateClock(){
 
-    const d = new Date();
-
-    document.getElementById("clock").innerHTML =
-        d.toLocaleTimeString("sv-SE",{
-            hour:"2-digit",
-            minute:"2-digit"
-        });
-
-    document.getElementById("date").innerHTML =
-        d.toLocaleDateString("sv-SE",{
-            weekday:"long",
-            day:"numeric",
-            month:"short"
-        });
+document.getElementById("clock").innerHTML=
+new Date().toLocaleTimeString(
+"sv-SE",
+{
+hour:"2-digit",
+minute:"2-digit"
+}
+);
 
 }
 
 updateClock();
+
 setInterval(updateClock,1000);
-
-fetch("https://api.open-meteo.com/v1/forecast?latitude=60.67&longitude=17.14&current_weather=true")
-.then(r=>r.json())
-.then(data=>{
-
-    document.getElementById("temp").innerHTML =
-        Math.round(data.current_weather.temperature)+"°";
-
-    let icon="☀️";
-
-    const code=data.current_weather.weathercode;
-
-    if(code>=1 && code<=3) icon="⛅";
-    if(code>=45) icon="🌫️";
-    if(code>=51) icon="🌦️";
-    if(code>=61) icon="🌧️";
-    if(code>=71) icon="❄️";
-    if(code>=95) icon="⛈️";
-
-    document.getElementById("weatherIcon").innerHTML = icon;
-
-});
 
 </script>
 
 </body>
+
 </html>
