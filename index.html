@@ -1,52 +1,104 @@
 <!DOCTYPE html>
 <html lang="sv">
+
 <head>
 <meta charset="utf-8">
 <title>SEHED Dashboard</title>
 
 <style>
-html, body {
+
+html, body{
     margin:0;
+    padding:0;
     width:100%;
     height:100%;
+    overflow:hidden;
+    font-family:Segoe UI, Arial, sans-serif;
 }
 
 body{
     background-image:url('Välkomstbildsehed.png');
     background-size:cover;
-    background-position:center;
-    color:white;
-    font-family:Arial,sans-serif;
+    background-position:center center;
 }
+
+/* Datum + klocka */
 
 .topbar{
     position:absolute;
-    top:20px;
-    left:20px;
-    text-shadow:2px 2px 8px #000;
-}
+    top:25px;
+    left:25px;
 
-.weather{
-    position:absolute;
-    top:20px;
-    right:20px;
-    text-align:right;
-    text-shadow:2px 2px 8px #000;
-}
+    background:rgba(0,0,0,0.55);
+    backdrop-filter:blur(8px);
 
-.clock{
-    font-size:48px;
-    font-weight:bold;
+    padding:20px 25px;
+    border-radius:16px;
+
+    color:white;
 }
 
 .date{
     font-size:24px;
+    font-weight:400;
+}
+
+.clock{
+    font-size:72px;
+    font-weight:700;
+    line-height:1;
+}
+
+/* Väder */
+
+.weather{
+    position:absolute;
+    top:25px;
+    right:25px;
+
+    background:rgba(0,0,0,0.55);
+    backdrop-filter:blur(8px);
+
+    padding:20px 25px;
+    border-radius:16px;
+
+    color:white;
+    text-align:right;
 }
 
 .temp{
-    font-size:48px;
-    font-weight:bold;
+    font-size:72px;
+    font-weight:700;
+    line-height:1;
 }
+
+.location{
+    font-size:26px;
+}
+
+/* Nederkant */
+
+.footer{
+    position:absolute;
+
+    bottom:20px;
+    left:50%;
+
+    transform:translateX(-50%);
+
+    background:rgba(0,0,0,0.55);
+    backdrop-filter:blur(8px);
+
+    color:white;
+
+    padding:12px 30px;
+
+    border-radius:12px;
+
+    font-size:22px;
+    font-weight:500;
+}
+
 </style>
 </head>
 
@@ -58,8 +110,12 @@ body{
 </div>
 
 <div class="weather">
-    <div class="temp" id="temp">--°C</div>
-    <div>Gävle</div>
+    <div class="temp" id="temp">--°</div>
+    <div class="location">Gävle</div>
+</div>
+
+<div class="footer">
+    SEHED Bygg Gävleborg
 </div>
 
 <script>
@@ -70,27 +126,29 @@ function updateClock() {
 
     document.getElementById("clock").innerHTML =
         d.toLocaleTimeString("sv-SE", {
-            hour:"2-digit",
-            minute:"2-digit"
+            hour: "2-digit",
+            minute: "2-digit"
         });
 
     document.getElementById("date").innerHTML =
         d.toLocaleDateString("sv-SE", {
-            weekday:"long",
-            year:"numeric",
-            month:"long",
-            day:"numeric"
+            weekday: "long",
+            year: "numeric",
+            month: "long",
+            day: "numeric"
         });
 }
 
 updateClock();
-setInterval(updateClock,1000);
+setInterval(updateClock, 1000);
 
 fetch("https://api.open-meteo.com/v1/forecast?latitude=60.67&longitude=17.14&current_weather=true")
-.then(r => r.json())
+.then(response => response.json())
 .then(data => {
+
     document.getElementById("temp").innerHTML =
-        Math.round(data.current_weather.temperature) + "°C";
+        Math.round(data.current_weather.temperature) + "°";
+
 });
 
 </script>
