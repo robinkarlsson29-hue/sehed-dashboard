@@ -1,132 +1,99 @@
-!DOCTYPE html
-html
-head
-meta charset=utf-8
-titleSEHED Dashboardtitle
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<title>SEHED Dashboard</title>
 
-style
-
-html, body{
-    margin0;
-    padding0;
-    width100%;
-    height100%;
-    overflowhidden;
-    font-familyArial, Helvetica, sans-serif;
+<style>
+html, body {
+    margin:0;
+    width:100%;
+    height:100%;
 }
 
 body{
-    background-imageurl(Välkomstbildsehed.png);
-    background-sizecover;
-    background-positioncenter;
+    background-image:url('Välkomstbildsehed.png');
+    background-size:cover;
+    background-position:center;
+    color:white;
+    font-family:Arial,sans-serif;
 }
 
 .topbar{
-    positionabsolute;
-    top25px;
-    left25px;
-
-    colorwhite;
-    text-shadow2px 2px 10px black;
-}
-
-.date{
-    font-size28px;
-    font-weightbold;
-}
-
-.clock{
-    font-size48px;
-    font-weightbold;
+    position:absolute;
+    top:20px;
+    left:20px;
+    text-shadow:2px 2px 8px #000;
 }
 
 .weather{
-    positionabsolute;
-    right25px;
-    top25px;
+    position:absolute;
+    top:20px;
+    right:20px;
+    text-align:right;
+    text-shadow:2px 2px 8px #000;
+}
 
-    colorwhite;
-    text-alignright;
+.clock{
+    font-size:48px;
+    font-weight:bold;
+}
 
-    text-shadow2px 2px 10px black;
+.date{
+    font-size:24px;
 }
 
 .temp{
-    font-size56px;
-    font-weightbold;
+    font-size:48px;
+    font-weight:bold;
 }
+</style>
+</head>
 
-.location{
-    font-size24px;
-}
+<body>
 
-style
+<div class="topbar">
+    <div class="date" id="date"></div>
+    <div class="clock" id="clock"></div>
+</div>
 
-head
+<div class="weather">
+    <div class="temp" id="temp">--°C</div>
+    <div>Gävle</div>
+</div>
 
-body
+<script>
 
-div class=topbar
-    div class=date id=datediv
-    div class=clock id=clockdiv
-div
+function updateClock() {
 
-div class=weather
-    div class=temp id=temp--°Cdiv
-    div class=locationGävlediv
-div
+    const d = new Date();
 
-script
-
-function updateClock(){
-
-    const d=new Date();
-
-    const days=[
-        Söndag,
-        Måndag,
-        Tisdag,
-        Onsdag,
-        Torsdag,
-        Fredag,
-        Lördag
-    ];
-
-    const months=[
-        januari,februari,mars,
-        april,maj,juni,
-        juli,augusti,september,
-        oktober,november,december
-    ];
-
-    document.getElementById(clock).innerHTML =
-        d.toLocaleTimeString('sv-SE',{
-            hour'2-digit',
-            minute'2-digit'
+    document.getElementById("clock").innerHTML =
+        d.toLocaleTimeString("sv-SE", {
+            hour:"2-digit",
+            minute:"2-digit"
         });
 
-    document.getElementById(date).innerHTML =
-        days[d.getDay()] +   +
-        d.getDate() +   +
-        months[d.getMonth()] +   +
-        d.getFullYear();
+    document.getElementById("date").innerHTML =
+        d.toLocaleDateString("sv-SE", {
+            weekday:"long",
+            year:"numeric",
+            month:"long",
+            day:"numeric"
+        });
 }
 
 updateClock();
 setInterval(updateClock,1000);
 
-
-
-fetch(httpsapi.open-meteo.comv1forecastlatitude=60.67&longitude=17.14&current_weather=true)
-.then(r=r.json())
-.then(data={
-
-document.getElementById(temp).innerHTML=
-Math.round(data.current_weather.temperature)+°C;
-
+fetch("https://api.open-meteo.com/v1/forecast?latitude=60.67&longitude=17.14&current_weather=true")
+.then(r => r.json())
+.then(data => {
+    document.getElementById("temp").innerHTML =
+        Math.round(data.current_weather.temperature) + "°C";
 });
 
-script
+</script>
 
-body
-html
+</body>
+</html>
